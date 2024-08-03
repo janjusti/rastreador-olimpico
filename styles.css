@@ -1,0 +1,112 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #171717;
+    color: #ffffff;
+    margin: 0;
+    padding: 2vh;
+    font-size: 1.1rem;
+}
+
+#content {
+    display: flex;
+    justify-content: space-between;
+    gap: 2vw;
+    max-width: 100%;
+    margin: 0 auto;
+    height: 80vh;
+}
+
+input[id="datePicker"] {
+    margin: 1vh auto;
+    text-align: center;
+    display: block;
+}
+
+#filters {
+    padding: 1vh;
+    margin-bottom: 3vh;
+    border: 0.2vh solid #ffffff;
+    border-radius: 8px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1vw;
+    overflow-y: auto;
+    height: 20vh;
+}
+
+#filters.filter-active {
+    border: 0.2vh solid #c20000;
+}
+
+#filters label {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: center;
+    align-items: center;
+    padding: 0.5vh 0;
+    cursor: pointer;
+    width: 30%;
+}
+
+#filters input[type="checkbox"] {
+    margin-right: 0.5vw;
+    accent-color: #4CAF50;
+}
+
+#filters label:hover {
+    background-color: #333333;
+    border-radius: 4px;
+}
+
+.live-container, .pending-container, .finished-container {
+    background: #000000;
+    border-radius: 0.1vh;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    padding: 2vh;
+    flex: 1;
+    min-width: 20%;
+}
+
+.event {
+    border-bottom: 0.1vh solid #b0b0b0;
+    padding: 2vh 0;
+}
+
+.event:last-child {
+    border-bottom: none;
+}
+
+.event div.eventStatus, div.competitors {
+    padding: 0.5vh 0 0.5vh 0;
+}
+
+.event div.eventStatus {
+    color: #c3c3c3;
+}
+
+.event div.filteredNOC {
+    color: #9bd94f;
+}
+
+.event div.eventTitle {
+    color: #ad0900;
+    padding-bottom: 1vh;
+    text-decoration: underline;
+}
+
+.event div.medal {
+    padding: 0.5vh;
+    border: 0.2em solid #e6b400;
+}
+.event .medal.bronze {
+    border-style: dotted
+}
+
+.event .competitors .results {
+    color: #959595;
+    font-size: small;
+}
+
+.event div.gettingReady {
+    color: #a28f00;
+}
