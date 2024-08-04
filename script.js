@@ -24,6 +24,7 @@ var fullData;
 function clearStats() {
     fullData = {};
     sportsToFilter = [];
+    document.getElementById("filters").classList.remove('filter-active');
     document.getElementById("filters").innerHTML = "";
     document.getElementById("content").innerHTML = "Loading...";
 }
