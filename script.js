@@ -118,6 +118,23 @@ function populateFilters() {
     const filtersDiv = document.getElementById("filters");
     const uniqueDisciplines = [...new Set(fullData.units.map(unit => unit.disciplineName))].sort();
 
+    const allCheckbox = document.createElement("input");
+    allCheckbox.type = "checkbox";
+    allCheckbox.id = "all-checkbox";
+    allCheckbox.addEventListener("change", function() {
+        const checkboxes = filtersDiv.querySelectorAll("input[type='checkbox']:not(#all-checkbox)");
+        checkboxes.forEach(checkbox => {
+            checkbox.checked = allCheckbox.checked;
+            const event = new Event('change');
+            checkbox.dispatchEvent(event);
+        });
+    });
+
+    const allLabel = document.createElement("label");
+    allLabel.textContent = "All";
+    allLabel.appendChild(allCheckbox);
+    filtersDiv.appendChild(allLabel);
+
     uniqueDisciplines.forEach(discipline => {
         const checkbox = document.createElement("input");
         checkbox.type = "checkbox";
@@ -134,6 +151,9 @@ function populateFilters() {
                 filtersDiv.classList.remove('filter-active');
             }
             updatePage();
+            if (!checkbox.checked) {
+                allCheckbox.checked = false;
+            }
         });
 
         const label = document.createElement("label");
