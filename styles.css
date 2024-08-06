@@ -67,11 +67,10 @@ input[id="datePicker"] {
 }
 
 .live-container, .pending-container, .finished-container {
-    /* background: #000000; */
     border-radius: 0.1vh;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     padding: 2vh;
-    flex: 1;
+    overflow: auto;
     min-width: 20%;
 }
 
@@ -106,6 +105,7 @@ input[id="datePicker"] {
     padding: 0.5vh;
     border: 0.2em solid #e6b400;
 }
+
 .event .medal.bronze {
     border-style: dotted
 }
@@ -117,4 +117,21 @@ input[id="datePicker"] {
 
 .event div.gettingReady {
     color: #a28f00;
+}
+
+@media (max-width: 900px) {
+    #content {
+        display: flex;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+    }
+    
+    #content > div {
+        flex: 0 0 50%;
+    }
+    
+    #content > div:last-child {
+        flex: 0 0 auto;
+        width: 100%;
+    }
 }
