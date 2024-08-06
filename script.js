@@ -116,8 +116,6 @@ function filterData() {
 
 function populateFilters() {
     const filtersDiv = document.getElementById("filters");
-    const sportsDiv = document.createElement('div');
-    sportsDiv.className = "sports";
     const uniqueDisciplines = [...new Set(fullData.units.map(unit => unit.disciplineName))].sort();
 
     uniqueDisciplines.forEach(discipline => {
