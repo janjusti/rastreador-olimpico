@@ -75,6 +75,14 @@ input[id="datePicker"] {
     min-width: 20%;
 }
 
+.live-container {
+    background-color: rgba(0, 255, 0, 0.1);
+}
+
+.finished-container {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
 .event {
     border-bottom: 0.1vh solid #b0b0b0;
     padding: 2vh 0;
