@@ -120,6 +120,10 @@ input[id="datePicker"] {
 }
 
 @media (max-width: 900px) {
+    body {
+        font-size: 0.8rem;
+    }
+
     #content {
         display: flex;
         flex-wrap: nowrap;
@@ -127,11 +131,11 @@ input[id="datePicker"] {
     }
     
     #content > div {
-        flex: 0 0 50%;
+        flex: 0 0 40%;
     }
     
     #content > div:last-child {
         flex: 0 0 auto;
-        width: 100%;
+        width: 90%;
     }
 }
