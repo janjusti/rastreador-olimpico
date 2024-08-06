@@ -12,12 +12,12 @@ body {
     gap: 2vw;
     max-width: 100%;
     margin: 0 auto;
-    height: 80vh;
 }
 
 #content > div {
     flex: 1;
     border-right: 0.5vh solid #adadad;
+    height: 100%;
 }
 
 #content > div:last-child {
