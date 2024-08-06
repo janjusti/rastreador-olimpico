@@ -132,10 +132,16 @@ input[id="datePicker"] {
     
     #content > div {
         flex: 0 0 40%;
+        width: 40%;
     }
-    
-    #content > div:last-child {
+
+    #content > div:nth-child(3) {
         flex: 0 0 auto;
-        width: 90%;
+        min-width: 40%;
+    }
+
+    #content > div:only-child {
+        flex: 0 0 auto;
+        min-width: 90%;
     }
 }
