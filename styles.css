@@ -1,6 +1,5 @@
 body {
     font-family: Arial, sans-serif;
-    background-color: #171717;
     color: #ffffff;
     margin: 0;
     padding: 2vh;
@@ -14,6 +13,15 @@ body {
     max-width: 100%;
     margin: 0 auto;
     height: 80vh;
+}
+
+#content > div {
+    flex: 1;
+    border-right: 0.5vh solid #adadad;
+}
+
+#content > div:last-child {
+    border-right: none;
 }
 
 input[id="datePicker"] {
@@ -59,7 +67,7 @@ input[id="datePicker"] {
 }
 
 .live-container, .pending-container, .finished-container {
-    background: #000000;
+    /* background: #000000; */
     border-radius: 0.1vh;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     padding: 2vh;
