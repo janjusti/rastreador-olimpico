@@ -1,5 +1,6 @@
 body {
     font-family: Arial, sans-serif;
+    background-color: #080808;
     color: #ffffff;
     margin: 0;
     padding: 2vh;
@@ -16,7 +17,7 @@ body {
 
 #content > div {
     flex: 1;
-    border-right: 0.5vh solid #adadad;
+    border-right: 0.5vh solid #828282;
     height: 100%;
 }
 
@@ -33,7 +34,7 @@ input[id="datePicker"] {
 #filters {
     padding: 1vh;
     margin-bottom: 3vh;
-    border: 0.2vh solid #ffffff;
+    border: 0.2vh solid #939393;
     border-radius: 8px;
     display: flex;
     flex-wrap: wrap;
@@ -96,7 +97,7 @@ input[id="datePicker"] {
 }
 
 .event div.eventTitle {
-    color: #ad0900;
+    color: #c40a00;
     padding-bottom: 1vh;
     text-decoration: underline;
 }
