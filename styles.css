@@ -98,6 +98,12 @@ input[id="datePicker"] {
 
 .event div.eventStatus {
     color: #c3c3c3;
+    font-weight: bold;
+}
+
+.event .eventStatus.futureEvent {
+    color: #c3c3c3a6;
+    font-weight: normal;
 }
 
 .event div.filteredNOC {

@@ -335,6 +335,9 @@ function updatePage() {
 
             const eventStatusDiv = document.createElement('div');
             eventStatusDiv.className = 'eventStatus';
+            if (elapsedTime.startsWith("-")) {
+                eventStatusDiv.classList.add("futureEvent");
+            }
             eventStatusDiv.innerHTML = `${startTime} (${elapsedTime})<br>`;
             eventStatusDiv.innerHTML += `${event.status}${event.startText === "" ? "" : " (" + event.startText + ")"}`
 
