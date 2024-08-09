@@ -125,6 +125,10 @@ input[id="datePicker"] {
     border-style: dotted
 }
 
+div.event:has(.filteredNOC) .medal {
+    border-color: #9bd94f;
+}
+
 .event .competitors .results {
     color: #959595;
     font-size: small;
