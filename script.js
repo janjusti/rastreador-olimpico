@@ -84,7 +84,7 @@ function filterData() {
     var filteredData = {"live": [], "pending": [], "finished": []};
     fullData.units.forEach(unit => {
         if (sportsToFilter.length === 0) {
-            const hasCustomCountry = unit.competitors.some(competitor => competitor.noc === filteredNOC);
+            const hasCustomCountry = unit.competitors?.some(competitor => competitor.noc === filteredNOC);
             if (isRealLive(unit)) {
                 filteredData.live.push(new ScheduleEvent(unit, hasCustomCountry))
             }
@@ -276,6 +276,9 @@ function updatePage() {
             let shownCompetitors = new Set();
 
             var competitors = event.competitors;
+            if (competitors === undefined) {
+                competitors = [];
+            }
             competitors = competitors.sort(competitorsSort);
 
             competitors.slice(0, 4).forEach(competitor => {
