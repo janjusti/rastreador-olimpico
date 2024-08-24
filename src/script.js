@@ -53,26 +53,24 @@ function stop(message) {
 
 function generateDayURL() {
     var date = document.getElementById('datePicker')?.value;
+    var dateObj = new Date(date);
+    var olympicsDates = { "start": new Date('2024-07-24'), "end": new Date('2024-08-11') };
+    var paralympicsDates = { "start": new Date('2024-08-28'), "end": new Date('2024-09-08') };
+    var compType;
+
     if (!date) {
         date = today;
     }
 
-    var dateObj = new Date(date);
-    var olympicsStart = new Date('2024-07-24');
-    var olympicsEnd = new Date('2024-08-11');
-    var paralympicsStart = new Date('2024-08-28');
-    var paralympicsEnd = new Date('2024-09-08');
-
-    var compType;
-
-    if ((dateObj >= olympicsStart && dateObj <= olympicsEnd)) {
+    if (dateObj >= olympicsDates.start && dateObj <= olympicsDates.end) {
         compType = "summer";
-    } else if (dateObj >= paralympicsStart && dateObj <= paralympicsEnd) {
-        compType = "summer-para"
+    } else if (dateObj >= paralympicsDates.start && dateObj <= paralympicsDates.end) {
+        compType = "summer-para";
     }
 
     return compType ? `https://sph-s-api.olympics.com/${compType}/schedules/api/ENG/schedule/day/${date}` : null;
 }
+
 
 async function fetchData() {
     try {
