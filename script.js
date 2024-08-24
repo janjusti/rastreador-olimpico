@@ -38,6 +38,17 @@ function handleDateChange() {
     fetchData();
 }
 
+function start() {
+    handleDateChange();
+    interval = setInterval(fetchData, 5000);
+}
+
+function stop(message) {
+    const contentDiv = document.getElementById('content');
+    contentDiv.innerHTML = message;
+    interval = clearInterval(interval);
+}
+
 function generateDayURL() {
     var date = document.getElementById('datePicker')?.value;
     if (!date) {
@@ -64,10 +75,17 @@ function generateDayURL() {
 async function fetchData() {
     try {
         const dayURL = generateDayURL();
+        if (dayURL === null) {
+            stop("Nothing here today...");
+            return;
+        }
         let response = await fetch(dayURL, {cache: "no-cache"});
         if (response.status !== 200) {
-            const contentDiv = document.getElementById('content');
-            contentDiv.innerHTML = `Error ${response.status} :(`;
+            stop(`Error ${response.status} :(`);
+            return;
+        } 
+        else if (interval === undefined) {
+            start();
         }
         const wasFullDataEmpty = isEmpty(fullData);
         fullData = await response.json();
@@ -80,7 +98,7 @@ async function fetchData() {
     }
 
     if (URLparams.get("onetime") === "true" && document.getElementById('content').innerText != "Loading...") {
-        clearInterval(interval)
+        interval = clearInterval(interval);
     }
 }
 
@@ -372,6 +390,5 @@ function updatePage() {
     delete(data);
 }
 
-clearStats();
-fetchData();
-var interval = setInterval(fetchData, 5000);
+var interval;
+start();
