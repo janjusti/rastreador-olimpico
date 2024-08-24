@@ -39,12 +39,26 @@ function handleDateChange() {
 }
 
 function generateDayURL() {
-    var date = document.getElementById('datePicker')?.value
-    if (date === undefined || date === "") {
+    var date = document.getElementById('datePicker')?.value;
+    if (!date) {
         date = today;
     }
-    var dayURL = `https://sph-s-api.olympics.com/summer/schedules/api/ENG/schedule/day/${date}`
-    return dayURL
+
+    var dateObj = new Date(date);
+    var olympicsStart = new Date('2024-07-24');
+    var olympicsEnd = new Date('2024-08-11');
+    var paralympicsStart = new Date('2024-08-28');
+    var paralympicsEnd = new Date('2024-09-08');
+
+    var compType;
+
+    if ((dateObj >= olympicsStart && dateObj <= olympicsEnd)) {
+        compType = "summer";
+    } else if (dateObj >= paralympicsStart && dateObj <= paralympicsEnd) {
+        compType = "summer-para"
+    }
+
+    return compType ? `https://sph-s-api.olympics.com/${compType}/schedules/api/ENG/schedule/day/${date}` : null;
 }
 
 async function fetchData() {
