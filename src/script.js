@@ -30,7 +30,9 @@ function clearStats() {
 }
 
 document.addEventListener('DOMContentLoaded', (event) => {
-    document.getElementById('datePicker').value = today;
+    let datePicker = document.getElementById('datePicker');
+    datePicker.value = today;
+    datePicker.onchange = handleDateChange;
 });
 
 function handleDateChange() {
