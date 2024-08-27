@@ -265,10 +265,6 @@ function competitorsSort(a, b) {
     return a.order - b.order;
 }
 
-function openInNewTab(url) {
-    window.open(url, '_blank').focus();
-}
-
 function updatePage() {
     var data = filterData();
     const contentDiv = document.getElementById('content');
@@ -366,7 +362,7 @@ function updatePage() {
             if (event.status === "Getting Ready") {
                 eventTitleDiv.classList.add('gettingReady');
             }
-            eventTitleDiv.setAttribute('onclick', `openInNewTab('${event.url}')`);
+            eventTitleDiv.setAttribute('onclick', `window.open('${event.url}', '_blank').focus();`);
 
             const eventStatusDiv = document.createElement('div');
             eventStatusDiv.className = 'eventStatus';
