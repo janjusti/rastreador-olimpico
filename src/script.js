@@ -94,7 +94,7 @@ async function fetchData() {
             stop(`Error ${response.status} :(`);
             return;
         } 
-        else if (interval === undefined) {
+        else if (interval === undefined && URLparams.get("onetime") === "false") {
             start();
         }
         const wasFullDataEmpty = isEmpty(fullData);
@@ -105,10 +105,6 @@ async function fetchData() {
         updatePage();
     } catch (error) {
         console.error('Error fetching data:', error);
-    }
-
-    if (URLparams.get("onetime") === "true" && document.getElementById('content').innerText != "Loading...") {
-        interval = clearInterval(interval);
     }
 }
 
