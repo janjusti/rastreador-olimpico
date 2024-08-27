@@ -1,25 +1,43 @@
+const today = new Date().toISOString().split('T')[0];
+const olympicsDates = { "start": new Date('2024-07-24'), "end": new Date('2024-08-11') };
+const paralympicsDates = { "start": new Date('2024-08-28'), "end": new Date('2024-09-08') };
+
 class ScheduleEvent {
     constructor(unit, hasCustomCountry) {     
         this.hasCustomCountry = hasCustomCountry;   
         this.phaseName = unit.phaseName;
         this.eventUnitName = unit.eventUnitName;
         this.disciplineName = unit.disciplineName;
-        this.startDate = unit.startDate;
+        this.startDate = new Date(unit.startDate);
         this.startText = unit.startText;
         this.status = unit.statusDescription;
         this.medalFlag = unit.medalFlag;
         this.competitors = unit.competitors;
-        this.url = `https://olympics.com${unit.extraData.detailUrl}`;
         this.id = unit.id;
+        this.mode = detectModeByDate(this.startDate);
+        this.url = this.mode === 'olympics' ? 
+            `https://olympics.com${unit.extraData.detailUrl}` :
+            this.mode === 'paralympics' ? 
+            `https://www.paralympic.org${unit.extraData.detailUrl}` : 
+            null
     }
 }
 
 var URLparams = new URLSearchParams(window.location.search);
 
 var filteredNOC = "BRA";
-const today = new Date().toISOString().split('T')[0];
 let sportsToFilter;
 var fullData;
+
+function detectModeByDate(date) {
+    if (date >= olympicsDates.start && date <= olympicsDates.end) {
+        return 'olympics';
+    } else if (date >= paralympicsDates.start && date <= paralympicsDates.end) {
+        return 'paralympics';
+    } else {
+        return null;
+    }
+}
 
 function clearStats() {
     fullData = {};
@@ -53,21 +71,13 @@ function stop(message) {
 
 function generateDayURL() {
     var date = document.getElementById('datePicker')?.value;
-    var dateObj = new Date(date);
-    var olympicsDates = { "start": new Date('2024-07-24'), "end": new Date('2024-08-11') };
-    var paralympicsDates = { "start": new Date('2024-08-28'), "end": new Date('2024-09-08') };
-    var compType;
-
     if (!date) {
         date = today;
     }
-
-    if (dateObj >= olympicsDates.start && dateObj <= olympicsDates.end) {
-        compType = "summer";
-    } else if (dateObj >= paralympicsDates.start && dateObj <= paralympicsDates.end) {
-        compType = "summer-para";
-    }
-
+    var dateObj = new Date(date);
+    
+    const mode = detectModeByDate(dateObj);
+    const compType = mode === "olympics" ? "summer" : mode === "paralympics" ? "summer-para" : null;
     return compType ? `https://sph-s-api.olympics.com/${compType}/schedules/api/ENG/schedule/day/${date}` : null;
 }
 
@@ -296,8 +306,7 @@ function updatePage() {
             const eventDiv = document.createElement('div');
             eventDiv.className = 'event';
 
-            const startDate = new Date(event.startDate);
-            const startTime = formatTime(startDate);
+            const startTime = formatTime(event.startDate);
             let elapsedTime = calculateTimeDifference(event.startDate);
 
             let competitorsHTML = '';
