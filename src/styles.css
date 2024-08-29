@@ -7,6 +7,12 @@ body {
     font-size: 1.1rem;
 }
 
+#medals {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
 #medals table {
     text-align: center;
     border-collapse: collapse;
@@ -37,6 +43,12 @@ body {
 
 #medals tr.filteredNOC {
     background-color: #9bd94f5f;
+}
+
+#medals span {
+    text-align: center;
+    color: silver;
+    margin-bottom: 1vh;
 }
 
 #content {

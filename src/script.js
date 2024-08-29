@@ -28,7 +28,7 @@ var URLparams = new URLSearchParams(window.location.search);
 var filteredNOC = "BRA";
 let sportsToFilter;
 var fullData;
-var medalsData = [];
+var medalsData = {};
 
 function detectModeByDate(date) {
     if (date >= olympicsDates.start && date <= olympicsDates.end) {
@@ -42,7 +42,7 @@ function detectModeByDate(date) {
 
 function clearStats() {
     fullData = {};
-    medalsData = [];
+    medalsData = {};
     sportsToFilter = [];
     document.getElementById("filters").classList.remove('filter-active');
     document.getElementById("filters").innerHTML = "";
@@ -101,17 +101,18 @@ async function fetchMedals() {
             null
         )
         if (url === null) {
-            return [];
+            return {};
         }
         const response = await fetch(url, {cache: "no-cache"});
         if (response.status !== 200) {
-            return [];
+            return {};
         }
         const data = await response.json();
         if (data.medalNOC === undefined) {
-            return [];
+            return {};
         }
 
+        const lastMod = new Date(response.headers.get('Last-Modified'));
         const filteredList = data.medalNOC.filter(item => 
             item.gender === "TOT" && item.sport === "GLO"
         ).map(item => ({
@@ -143,7 +144,7 @@ async function fetchMedals() {
 
         const finalSortedList = newList.sort((a, b) => a.rank - b.rank);
 
-        return finalSortedList;
+        return {"NOCs": finalSortedList, "last_mod": lastMod};
     } catch (error) {
         console.error('Error fetching data:', error);
     }
@@ -275,7 +276,7 @@ function populateMedals() {
     const medalsDiv = document.getElementById('medals');
     medalsDiv.innerHTML = '';
 
-    if (medalsData === undefined || medalsData.length === 0) {
+    if (medalsData.NOCs === undefined || medalsData.NOCs.length === 0) {
         return;
     }
 
@@ -289,7 +290,7 @@ function populateMedals() {
     });
     table.appendChild(headerRow);
 
-    medalsData.forEach(item => {
+    medalsData.NOCs.forEach(item => {
         const row = document.createElement('tr');
         if (item.org === filteredNOC) {
             row.classList.add('filteredNOC');
@@ -309,8 +310,21 @@ function populateMedals() {
         });
         table.appendChild(row);
     });
+    
+    const lastMod = document.createElement('span');
+    const formattedDate = medalsData.last_mod.toLocaleString('en-GB', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: false
+    }).replace(',', '');
+    lastMod.innerText = `Latest update: ${formattedDate} (${calculateTimeDifference(medalsData.last_mod)})`
 
     medalsDiv.appendChild(table);
+    medalsDiv.appendChild(lastMod);
 }
 
 function formatTime(date) {
