@@ -303,9 +303,20 @@ function populateMedals() {
             item.bronze, 
             item.total
         ];        
-        data.forEach(text => {
+        data.forEach((text, index) => {
             const td = document.createElement('td');
-            td.textContent = text;
+            
+            if (index === 1) {
+                td.classList.add("country");
+                const img = document.createElement('img');
+                img.classList.add("flag");
+                img.src = `https://www.paralympic.org/OG2024/assets/images/flags/PG2024/${text}.webp`;
+                td.appendChild(img);
+                td.appendChild(document.createTextNode(text));
+            } else {
+                td.textContent = text;
+            }
+
             row.appendChild(td);
         });
         table.appendChild(row);

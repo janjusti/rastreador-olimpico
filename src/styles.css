@@ -41,6 +41,21 @@ body {
     color: #a16e00;
 }
 
+#medals .country {
+    display: flex;
+    align-items: center;
+    justify-content: left;
+}
+
+#medals .country .flag {
+    margin-right: 0.5em;
+    max-height: 1em;
+}
+
+#medals .country span {
+    line-height: 1em;
+}
+
 #medals tr.filteredNOC {
     background-color: #9bd94f5f;
 }
