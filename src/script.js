@@ -347,15 +347,17 @@ function isEmpty(obj) {
 }
 
 function liveEventsSort(a, b) {
-    if (a.status === "Getting Ready") return -1;
-    if (b.status === "Getting Ready") return 1;
+    if (a.status === "Getting Ready" && a.hasCustomCountry === true) return -1;
+    if (b.status === "Getting Ready" && b.hasCustomCountry === true) return 1;
     if (a.medalFlag !== 0 && a.hasCustomCountry === true) return -1;
     if (b.medalFlag !== 0 && b.hasCustomCountry === true) return 1;
     if (a.hasCustomCountry === true) return -1;
     if (b.hasCustomCountry === true) return 1;
+    if (a.status === "Getting Ready") return -1;
+    if (b.status === "Getting Ready") return 1;
     if (a.medalFlag !== 0) return -1;
     if (b.medalFlag !== 0) return 1;
-    return 0;
+    return -1;
 }
 
 function pendingEventsSort(a, b) {
@@ -401,14 +403,14 @@ function updatePage() {
         const title = document.createElement('h1');
         title.innerText = category.charAt(0).toUpperCase() + category.slice(1);
         categoryDiv.appendChild(title);
-        if (category === 'live' || category === 'finished') {
-            events = events.slice().reverse();
-        }
         if (category === 'pending') {
             events = events.sort(pendingEventsSort);
         }
         if (category === 'live') {
             events = events.sort(liveEventsSort);
+        }
+        if (category === 'finished') {
+            events = events.slice().reverse();
         }
 
         events.forEach(event => {
