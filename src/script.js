@@ -28,6 +28,7 @@ var URLparams = new URLSearchParams(window.location.search);
 var filteredNOC = "BRA";
 let sportsToFilter;
 var fullData;
+var medalsData = [];
 
 function detectModeByDate(date) {
     if (date >= olympicsDates.start && date <= olympicsDates.end) {
@@ -41,6 +42,7 @@ function detectModeByDate(date) {
 
 function clearStats() {
     fullData = {};
+    medalsData = [];
     sportsToFilter = [];
     document.getElementById("filters").classList.remove('filter-active');
     document.getElementById("filters").innerHTML = "";
@@ -66,19 +68,85 @@ function start() {
 function stop(message) {
     const contentDiv = document.getElementById('content');
     contentDiv.innerHTML = message;
+    const medalsDiv = document.getElementById('medals');
+    medalsDiv.innerHTML = "";
     interval = clearInterval(interval);
 }
 
-function generateDayURL() {
+function getSelectedDate() {
     var date = document.getElementById('datePicker')?.value;
     if (!date) {
         date = today;
     }
+    return date
+}
+
+function generateDayURL() {
+    var date = getSelectedDate();
     var dateObj = new Date(date);
     
     const mode = detectModeByDate(dateObj);
     const compType = mode === "olympics" ? "summer" : mode === "paralympics" ? "summer-para" : null;
     return compType ? `https://sph-s-api.olympics.com/${compType}/schedules/api/ENG/schedule/day/${date}` : null;
+}
+
+async function fetchMedals() {
+    try {
+        const currMode = detectModeByDate(new Date(getSelectedDate()));
+        const url = (
+            currMode === "olympics" ? 
+            "https://olympics.com/OG2024/data/CIS_MedalNOCs~lang=ENG~comp=OG2024.json" :
+            currMode === "paralympics" ? 
+            "https://www.paralympic.org/OG2024/data/CIS_MedalNOCs~comp=PG2024~lang=ENG.json" :
+            null
+        )
+        if (url === null) {
+            return [];
+        }
+        const response = await fetch(url, {cache: "no-cache"});
+        if (response.status !== 200) {
+            return [];
+        }
+        const data = await response.json();
+        if (data.medalNOC === undefined) {
+            return [];
+        }
+
+        const filteredList = data.medalNOC.filter(item => 
+            item.gender === "TOT" && item.sport === "GLO"
+        ).map(item => ({
+            org: item.org,
+            gold: item.gold,
+            silver: item.silver,
+            bronze: item.bronze,
+            total: item.total,
+            rank: item.rank
+        }));
+
+        const sortedList = filteredList.sort((a, b) => a.rank - b.rank);
+        const newList = sortedList.slice(0, 3);
+        const filteredIndex = sortedList.findIndex(item => item.org === filteredNOC);
+        if (filteredIndex !== -1) {
+            const filteredItem = sortedList[filteredIndex];
+
+            if (filteredIndex > 0 && !newList.some(item => item.org === sortedList[filteredIndex - 1].org)) {
+                newList.push(sortedList[filteredIndex - 1]);
+            }
+            if (filteredIndex < sortedList.length - 1 && !newList.some(item => item.org === sortedList[filteredIndex + 1].org)) {
+                newList.push(sortedList[filteredIndex + 1]);
+            }
+
+            if (!newList.some(item => item.org === filteredNOC)) {
+                newList.push(filteredItem);
+            }
+        }
+
+        const finalSortedList = newList.sort((a, b) => a.rank - b.rank);
+
+        return finalSortedList;
+    } catch (error) {
+        console.error('Error fetching data:', error);
+    }
 }
 
 
@@ -102,6 +170,7 @@ async function fetchData() {
         if (wasFullDataEmpty && !isEmpty(fullData)) {
             populateFilters();
         }
+        medalsData = await fetchMedals();
         updatePage();
     } catch (error) {
         console.error('Error fetching data:', error);
@@ -202,6 +271,48 @@ function populateFilters() {
     });
 }
 
+function populateMedals() {
+    const medalsDiv = document.getElementById('medals');
+    medalsDiv.innerHTML = '';
+
+    if (medalsData === undefined || medalsData.length === 0) {
+        return;
+    }
+
+    const table = document.createElement('table');
+    const headerRow = document.createElement('tr');
+    const headers = ['Rank', 'Country', 'Gold', 'Silver', 'Bronze', 'Total'];
+    headers.forEach(headerText => {
+        const th = document.createElement('th');
+        th.textContent = headerText;
+        headerRow.appendChild(th);
+    });
+    table.appendChild(headerRow);
+
+    medalsData.forEach(item => {
+        const row = document.createElement('tr');
+        if (item.org === filteredNOC) {
+            row.classList.add('filteredNOC');
+        }
+        const data = [
+            item.rank, 
+            item.org, 
+            item.gold, 
+            item.silver, 
+            item.bronze, 
+            item.total
+        ];        
+        data.forEach(text => {
+            const td = document.createElement('td');
+            td.textContent = text;
+            row.appendChild(td);
+        });
+        table.appendChild(row);
+    });
+
+    medalsDiv.appendChild(table);
+}
+
 function formatTime(date) {
     return date.toLocaleTimeString('en-US', { hour12: false });
 }
@@ -272,6 +383,8 @@ function competitorsSort(a, b) {
 }
 
 function updatePage() {
+    populateMedals();
+    
     var data = filterData();
     const contentDiv = document.getElementById('content');
     contentDiv.innerHTML = '';

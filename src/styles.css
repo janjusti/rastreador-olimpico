@@ -7,6 +7,28 @@ body {
     font-size: 1.1rem;
 }
 
+#medals table {
+    text-align: center;
+    border-collapse: collapse;
+    margin: 3vh auto 3vh auto
+}
+
+#medals th {
+    border: 1px solid #ddd;
+    padding: 0.5vw;
+    background-color: #000000;
+    font-weight: bold;
+}
+
+#medals td {
+    border: 1px solid #ddd;
+    padding: 0.5vw;
+}
+
+#medals tr.filteredNOC {
+    color: #9bd94f;
+}
+
 #content {
     display: flex;
     justify-content: space-between;
