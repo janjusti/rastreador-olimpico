@@ -124,7 +124,7 @@ async function fetchMedals() {
         }));
 
         const sortedList = filteredList.sort((a, b) => a.rank - b.rank);
-        const newList = sortedList.slice(0, 3);
+        const newList = sortedList.slice(0, 5);
         const filteredIndex = sortedList.findIndex(item => item.org === filteredNOC);
         if (filteredIndex !== -1) {
             const filteredItem = sortedList[filteredIndex];
