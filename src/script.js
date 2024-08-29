@@ -353,6 +353,8 @@ function liveEventsSort(a, b) {
     if (b.medalFlag !== 0 && b.hasCustomCountry === true) return 1;
     if (a.hasCustomCountry === true) return -1;
     if (b.hasCustomCountry === true) return 1;
+    if (a.medalFlag !== 0 && a.status === "Getting Ready") return -1;
+    if (b.medalFlag !== 0 && b.status === "Getting Ready") return 1;
     if (a.status === "Getting Ready") return -1;
     if (b.status === "Getting Ready") return 1;
     if (a.medalFlag !== 0) return -1;
