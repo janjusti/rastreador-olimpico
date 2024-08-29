@@ -10,7 +10,7 @@ body {
 #medals table {
     text-align: center;
     border-collapse: collapse;
-    margin: 3vh auto 3vh auto
+    margin: 2vh auto 2vh auto
 }
 
 #medals th {
@@ -25,8 +25,18 @@ body {
     padding: 0.5vw;
 }
 
+#medals table td:nth-child(3) {
+    color: gold;
+}
+#medals table td:nth-child(4) {
+    color: silver;
+}
+#medals table td:nth-child(5) {
+    color: #a16e00;
+}
+
 #medals tr.filteredNOC {
-    color: #9bd94f;
+    background-color: #9bd94f5f;
 }
 
 #content {
