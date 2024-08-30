@@ -281,6 +281,15 @@ function populateMedals() {
     }
 
     const table = document.createElement('table');
+    const currMode = detectModeByDate(new Date(getSelectedDate()));
+    const medalTableURL = (
+        currMode === "olympics" ? 
+        "https://olympics.com/en/paris-2024/medals" :
+        currMode === "paralympics" ? 
+        "https://www.paralympic.org/en/paris-2024-paralympics/medals" :
+        null
+    )
+    table.setAttribute('onclick', `window.open('${medalTableURL}', '_blank').focus();`);
     const headerRow = document.createElement('tr');
     const headers = ['Rank', 'Country', 'Gold', 'Silver', 'Bronze', 'Total'];
     headers.forEach(headerText => {
