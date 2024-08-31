@@ -27,6 +27,7 @@ var URLparams = new URLSearchParams(window.location.search);
 
 var filteredNOC = "BRA";
 let sportsToFilter;
+let NOCToFilter;
 var fullData;
 var medalsData = {};
 
@@ -44,6 +45,7 @@ function clearStats() {
     fullData = {};
     medalsData = {};
     sportsToFilter = [];
+    NOCToFilter = null;
     document.getElementById("filters").classList.remove('filter-active');
     document.getElementById("filters").innerHTML = "";
     document.getElementById("content").innerHTML = "Loading...";
@@ -191,8 +193,11 @@ function isRealFinished(unit) {
 function filterData() {
     var filteredData = {"live": [], "pending": [], "finished": []};
     fullData.units.forEach(unit => {
+        const hasCustomCountry = unit.competitors?.some(competitor => competitor.noc === filteredNOC);
+        if (!hasCustomCountry && NOCToFilter !== null) {
+            return;
+        }
         if (sportsToFilter.length === 0) {
-            const hasCustomCountry = unit.competitors?.some(competitor => competitor.noc === filteredNOC);
             if (isRealLive(unit)) {
                 filteredData.live.push(new ScheduleEvent(unit, hasCustomCountry))
             }
@@ -230,22 +235,38 @@ function populateFilters() {
     allCheckbox.type = "checkbox";
     allCheckbox.id = "all-checkbox";
     allCheckbox.addEventListener("change", function() {
-        const checkboxes = filtersDiv.querySelectorAll("input[type='checkbox']:not(#all-checkbox)");
+        const checkboxes = filtersDiv.querySelectorAll("input#discipline-checkbox");
         checkboxes.forEach(checkbox => {
             checkbox.checked = allCheckbox.checked;
             const event = new Event('change');
             checkbox.dispatchEvent(event);
         });
     });
-
     const allLabel = document.createElement("label");
     allLabel.textContent = "All";
     allLabel.appendChild(allCheckbox);
     filtersDiv.appendChild(allLabel);
 
+    const onlyNOCCheckbox = document.createElement("input");
+    onlyNOCCheckbox.type = "checkbox";
+    onlyNOCCheckbox.id = "onlyNOC-checkbox";
+    onlyNOCCheckbox.addEventListener("change", function() {
+        if (onlyNOCCheckbox.checked) {
+            NOCToFilter = filteredNOC;
+        } else {
+            NOCToFilter = null;
+        }
+        updatePage();
+    });
+    const onlyNOCLabel = document.createElement("label");
+    onlyNOCLabel.textContent = `Only ${filteredNOC}`;
+    onlyNOCLabel.appendChild(onlyNOCCheckbox);
+    filtersDiv.appendChild(onlyNOCLabel);
+
     uniqueDisciplines.forEach(discipline => {
         const checkbox = document.createElement("input");
         checkbox.type = "checkbox";
+        checkbox.id = "discipline-checkbox"
         checkbox.value = discipline;
         checkbox.addEventListener("change", function() {
             if (checkbox.checked) {
