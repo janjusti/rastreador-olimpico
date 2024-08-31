@@ -126,6 +126,11 @@ input[id="datePicker"] {
     overflow-y: auto;
 }
 
+#discipline-filters.disabled {
+    opacity: 0.5;
+    pointer-events: none;
+}
+
 #filters label {
     display: flex;
     flex-direction: row-reverse;

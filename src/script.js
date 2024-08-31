@@ -239,11 +239,22 @@ function populateFilters() {
     allCheckbox.id = "all-checkbox";
     allCheckbox.addEventListener("change", function() {
         const checkboxes = disciplineFilters.querySelectorAll("input#discipline-checkbox");
-        checkboxes.forEach(checkbox => {
-            checkbox.checked = allCheckbox.checked;
-            const event = new Event('change');
-            checkbox.dispatchEvent(event);
-        });
+        if (allCheckbox.checked) {
+            disciplineFilters.classList.add('disabled')
+            sportsToFilter = Array.from(checkboxes).map(checkbox => checkbox.value);
+            filtersDiv.classList.add('filter-active');
+            checkboxes.forEach(checkbox => {
+                checkbox.checked = true;
+            });
+        } else {
+            disciplineFilters.classList.remove('disabled');
+            sportsToFilter = [];
+            filtersDiv.classList.remove('filter-active');
+            checkboxes.forEach(checkbox => {
+                checkbox.checked = false;
+            });
+        }
+        updatePage();
     });
     const allLabel = document.createElement("label");
     allLabel.textContent = "All";
