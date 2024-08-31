@@ -418,19 +418,12 @@ function calculateTimeDifference(targetDateTime) {
     const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
     const seconds = Math.floor((difference % (1000 * 60)) / 1000);
 
-    let formattedTime = '';
-    if (days > 0) {
-        formattedTime += `${days}d`;
-    }
-    if (hours > 0 || days > 0) {
-        formattedTime += `${hours}h`;
-    }
-    if (minutes > 0 || hours > 0 || days > 0) {
-        formattedTime += `${minutes}m`;
-    }
-    if (seconds > 0 || (!days && !hours && !minutes)) {
-        formattedTime += `${seconds}s`;
-    }
+    const formattedDays = days > 0 ? String(days).padStart(2, '0') + 'd' : '';
+    const formattedHours = (hours > 0 || days > 0) ? String(hours).padStart(2, '0') + 'h' : '';
+    const formattedMinutes = (minutes > 0 || hours > 0 || days > 0) ? String(minutes).padStart(2, '0') + 'm' : '';
+    const formattedSeconds = String(seconds).padStart(2, '0') + 's';
+
+    const formattedTime = `${formattedDays}${formattedHours}${formattedMinutes}${formattedSeconds}`;
 
     return isFuture ? `-${formattedTime}` : formattedTime;
 }
