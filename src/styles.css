@@ -155,7 +155,7 @@ input[id="datePicker"] {
     border-radius: 0.1vh;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     padding: 2vh;
-    overflow: auto;
+    overflow-wrap: break-word;
     min-width: 20%;
 }
 
