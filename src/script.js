@@ -401,19 +401,32 @@ function calculateTimeDifference(targetDateTime) {
     const targetTime = new Date(targetDateTime);
     let difference = targetTime - now;
 
-    let isFuture = difference >= 0;
+    const isFuture = difference >= 0;
 
     if (!isFuture) {
         difference = now - targetTime;
     }
 
-    const hours = Math.floor(difference / (1000 * 60 * 60));
+    const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
     const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
     const seconds = Math.floor((difference % (1000 * 60)) / 1000);
 
-    const formattedTime = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
-    
-    return isFuture ? `-${formattedTime}` : `${formattedTime}`;
+    let formattedTime = '';
+    if (days > 0) {
+        formattedTime += `${days}d`;
+    }
+    if (hours > 0 || days > 0) {
+        formattedTime += `${hours}h`;
+    }
+    if (minutes > 0 || hours > 0 || days > 0) {
+        formattedTime += `${minutes}m`;
+    }
+    if (seconds > 0 || (!days && !hours && !minutes)) {
+        formattedTime += `${seconds}s`;
+    }
+
+    return isFuture ? `-${formattedTime}` : formattedTime;
 }
 
 function isEmpty(obj) {
