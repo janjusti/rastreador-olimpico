@@ -254,10 +254,13 @@ function populateFilters() {
     onlyNOCCheckbox.type = "checkbox";
     onlyNOCCheckbox.id = "onlyNOC-checkbox";
     onlyNOCCheckbox.addEventListener("change", function() {
+        const contentDiv = document.getElementById("content");
         if (onlyNOCCheckbox.checked) {
             NOCToFilter = filteredNOC;
+            contentDiv.classList.add('noc-filter-active');
         } else {
             NOCToFilter = null;
+            contentDiv.classList.remove('noc-filter-active');
         }
         updatePage();
     });

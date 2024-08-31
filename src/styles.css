@@ -72,6 +72,7 @@ body {
     gap: 2vw;
     max-width: 100%;
     margin: 0 auto;
+    border-radius: 8px;
 }
 
 #content > div {
@@ -82,6 +83,10 @@ body {
 
 #content > div:last-child {
     border-right: none;
+}
+
+#content.noc-filter-active {
+    border: 0.2vh solid #9bd94f;
 }
 
 input[id="datePicker"] {
