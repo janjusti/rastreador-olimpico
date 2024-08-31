@@ -96,14 +96,29 @@ input[id="datePicker"] {
     border: 0.2vh solid #939393;
     border-radius: 8px;
     display: flex;
-    flex-wrap: wrap;
-    gap: 1vw;
+    flex-direction: column;
+    gap: 1vh;
     overflow-y: auto;
     height: 20vh;
 }
 
 #filters.filter-active {
     border: 0.2vh solid #c20000;
+}
+
+#special-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1vw;
+    margin-bottom: 1vh;
+    justify-content: center;
+}
+
+#discipline-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1vw;
+    overflow-y: auto;
 }
 
 #filters label {

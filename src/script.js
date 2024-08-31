@@ -231,11 +231,14 @@ function populateFilters() {
     const filtersDiv = document.getElementById("filters");
     const uniqueDisciplines = [...new Set(fullData.units.map(unit => unit.disciplineName))].sort();
 
+    const specialFilters = document.createElement("div");
+    specialFilters.id = "special-filters";
+
     const allCheckbox = document.createElement("input");
     allCheckbox.type = "checkbox";
     allCheckbox.id = "all-checkbox";
     allCheckbox.addEventListener("change", function() {
-        const checkboxes = filtersDiv.querySelectorAll("input#discipline-checkbox");
+        const checkboxes = disciplineFilters.querySelectorAll("input#discipline-checkbox");
         checkboxes.forEach(checkbox => {
             checkbox.checked = allCheckbox.checked;
             const event = new Event('change');
@@ -245,7 +248,7 @@ function populateFilters() {
     const allLabel = document.createElement("label");
     allLabel.textContent = "All";
     allLabel.appendChild(allCheckbox);
-    filtersDiv.appendChild(allLabel);
+    specialFilters.appendChild(allLabel);
 
     const onlyNOCCheckbox = document.createElement("input");
     onlyNOCCheckbox.type = "checkbox";
@@ -261,12 +264,16 @@ function populateFilters() {
     const onlyNOCLabel = document.createElement("label");
     onlyNOCLabel.textContent = `Only ${filteredNOC}`;
     onlyNOCLabel.appendChild(onlyNOCCheckbox);
-    filtersDiv.appendChild(onlyNOCLabel);
+    specialFilters.appendChild(onlyNOCLabel);
 
+    filtersDiv.appendChild(specialFilters);
+
+    const disciplineFilters = document.createElement("div");
+    disciplineFilters.id = "discipline-filters";
     uniqueDisciplines.forEach(discipline => {
         const checkbox = document.createElement("input");
         checkbox.type = "checkbox";
-        checkbox.id = "discipline-checkbox"
+        checkbox.id = "discipline-checkbox";
         checkbox.value = discipline;
         checkbox.addEventListener("change", function() {
             if (checkbox.checked) {
@@ -289,9 +296,12 @@ function populateFilters() {
         label.textContent = discipline;
         label.appendChild(checkbox);
 
-        filtersDiv.appendChild(label);
+        disciplineFilters.appendChild(label);
     });
+
+    filtersDiv.appendChild(disciplineFilters);
 }
+
 
 function populateMedals() {
     const medalsDiv = document.getElementById('medals');
