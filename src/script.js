@@ -364,7 +364,13 @@ function populateMedals() {
                 td.classList.add("country");
                 const img = document.createElement('img');
                 img.classList.add("flag");
-                img.src = `https://www.paralympic.org/OG2024/assets/images/flags/PG2024/${text}.webp`;
+                img.src = (
+                    currMode === "olympics" ? 
+                    `https://gstatic.olympics.com/s1/t_original/static/noc/oly/3x2/180x120/${text}.png` :
+                    currMode === "paralympics" ? 
+                    `https://www.paralympic.org/OG2024/assets/images/flags/PG2024/${text}.webp` :
+                    null
+                )
                 td.appendChild(img);
                 td.appendChild(document.createTextNode(text));
             } else {
