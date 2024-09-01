@@ -136,6 +136,10 @@ input[id="datePicker"] {
     pointer-events: none;
 }
 
+#discipline-filters.scrolled {
+    border-top: 0.1vh solid #ddd;
+}
+
 #filters label {
     display: flex;
     flex-direction: row-reverse;

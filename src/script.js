@@ -302,6 +302,13 @@ function populateFilters() {
 
     const disciplineFilters = document.createElement("div");
     disciplineFilters.id = "discipline-filters";
+    disciplineFilters.addEventListener('scroll', function() {
+        if (disciplineFilters.scrollTop > 0) {
+            disciplineFilters.classList.add('scrolled');
+        } else {
+            disciplineFilters.classList.remove('scrolled');
+        }
+    });
     uniqueDisciplines.forEach(discipline => {
         const checkbox = document.createElement("input");
         checkbox.type = "checkbox";
