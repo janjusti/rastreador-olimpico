@@ -121,6 +121,7 @@ input[id="datePicker"] {
     gap: 1vw;
     margin-bottom: 1vh;
     justify-content: center;
+    background-color: #c3c3c327;
 }
 
 #discipline-filters {
