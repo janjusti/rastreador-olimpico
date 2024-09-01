@@ -319,9 +319,6 @@ function populateFilters() {
                 filtersDiv.classList.remove('filter-active');
             }
             updatePage();
-            if (!checkbox.checked) {
-                allCheckbox.checked = false;
-            }
         });
 
         const label = document.createElement("label");
