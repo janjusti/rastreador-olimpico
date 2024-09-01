@@ -10,6 +10,7 @@ class ScheduleEvent {
         this.disciplineName = unit.disciplineName;
         this.startDate = new Date(unit.startDate);
         this.startText = unit.startText;
+        this.order = unit.order;
         this.status = unit.statusDescription;
         this.medalFlag = unit.medalFlag;
         this.competitors = unit.competitors;
@@ -584,6 +585,30 @@ function updatePage() {
             }
             eventStatusDiv.innerHTML = `${startTime} (${elapsedTime})<br>`;
             eventStatusDiv.innerHTML += `${event.status}${event.startText === "" ? "" : " (" + event.startText + ")"}`
+            if (category === "pending") {
+                const pendingDiscipline = fullData.units.filter(item => 
+                    !item.liveFlag && item.status !== "FINISHED" &&
+                    (
+                        (new Date(item.startDate) < event.startDate) ||
+                        (
+                            new Date(item.startDate).getTime() === event.startDate.getTime() &&
+                            item.order < event.order
+                        )
+                    ) && 
+                    item.disciplineName === event.disciplineName &&
+                    item.id !== event.id
+                ).length;
+                const liveDiscipline = fullData.units.filter(item => 
+                    item.liveFlag &&
+                    item.disciplineName === event.disciplineName &&
+                    item.id !== event.id
+                ).length;
+                if (pendingDiscipline+liveDiscipline > 0) {
+                    eventStatusDiv.innerHTML += ` - ${pendingDiscipline}+${liveDiscipline} to go`
+                } else {
+                    eventStatusDiv.classList.add("nextEvent");
+                }
+            }
 
             eventDiv.innerHTML = '';
             eventDiv.appendChild(eventTitleDiv);
