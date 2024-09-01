@@ -630,7 +630,7 @@ function updatePage() {
                     item.id !== event.id
                 ).length;
                 if (pendingDiscipline+liveDiscipline > 0) {
-                    eventStatusDiv.innerHTML += ` - ${pendingDiscipline}+${liveDiscipline} to go`
+                    eventStatusDiv.innerHTML += `: ${pendingDiscipline}+${liveDiscipline} to go`
                 } else {
                     eventStatusDiv.classList.add("nextEvent");
                 }
