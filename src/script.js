@@ -87,6 +87,11 @@ function getSelectedDate() {
 }
 
 function generateDayURL() {
+    const customDayURL = URLparams.get("customDayURL");
+    if (customDayURL !== null) {
+        return customDayURL;
+    }
+    
     var date = getSelectedDate();
     var dateObj = new Date(date);
     
