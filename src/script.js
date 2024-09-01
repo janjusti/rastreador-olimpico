@@ -29,6 +29,7 @@ var URLparams = new URLSearchParams(window.location.search);
 var filteredNOC = "BRA";
 let sportsToFilter;
 let NOCToFilter;
+let onlyMedalEventFilter;
 var fullData;
 var medalsData = {};
 
@@ -47,6 +48,7 @@ function clearStats() {
     medalsData = {};
     sportsToFilter = [];
     NOCToFilter = null;
+    onlyMedalEventFilter = false;
     document.getElementById("filters").classList.remove('filter-active');
     document.getElementById("filters").innerHTML = "";
     document.getElementById("content").innerHTML = "Loading...";
@@ -198,6 +200,9 @@ function filterData() {
         if (!hasCustomCountry && NOCToFilter !== null) {
             return;
         }
+        if (onlyMedalEventFilter && unit.medalFlag === 0) {
+            return;
+        }
         if (sportsToFilter.length === 0) {
             if (isRealLive(unit)) {
                 filteredData.live.push(new ScheduleEvent(unit, hasCustomCountry))
@@ -228,6 +233,19 @@ function filterData() {
     return filteredData;
 }
 
+function createSpecialFilterCheckbox(id, labelText, changeHandler) {
+    const checkbox = document.createElement("input");
+    checkbox.type = "checkbox";
+    checkbox.id = id;
+    checkbox.addEventListener("change", changeHandler);
+
+    const label = document.createElement("label");
+    label.textContent = labelText;
+    label.appendChild(checkbox);
+
+    return label;
+}
+
 function populateFilters() {
     const filtersDiv = document.getElementById("filters");
     const uniqueDisciplines = [...new Set(fullData.units.map(unit => unit.disciplineName))].sort();
@@ -235,13 +253,10 @@ function populateFilters() {
     const specialFilters = document.createElement("div");
     specialFilters.id = "special-filters";
 
-    const allCheckbox = document.createElement("input");
-    allCheckbox.type = "checkbox";
-    allCheckbox.id = "all-checkbox";
-    allCheckbox.addEventListener("change", function() {
+    const allCheckboxLabel = createSpecialFilterCheckbox("all-checkbox", "All", function() {
         const checkboxes = disciplineFilters.querySelectorAll("input#discipline-checkbox");
-        if (allCheckbox.checked) {
-            disciplineFilters.classList.add('disabled')
+        if (this.checked) {
+            disciplineFilters.classList.add('disabled');
             sportsToFilter = Array.from(checkboxes).map(checkbox => checkbox.value);
             filtersDiv.classList.add('filter-active');
             checkboxes.forEach(checkbox => {
@@ -257,17 +272,10 @@ function populateFilters() {
         }
         updatePage();
     });
-    const allLabel = document.createElement("label");
-    allLabel.textContent = "All";
-    allLabel.appendChild(allCheckbox);
-    specialFilters.appendChild(allLabel);
-
-    const onlyNOCCheckbox = document.createElement("input");
-    onlyNOCCheckbox.type = "checkbox";
-    onlyNOCCheckbox.id = "onlyNOC-checkbox";
-    onlyNOCCheckbox.addEventListener("change", function() {
+    specialFilters.appendChild(allCheckboxLabel);
+    const onlyNOCCheckboxLabel = createSpecialFilterCheckbox("onlyNOC-checkbox", `Only ${filteredNOC}`, function() {
         const contentDiv = document.getElementById("content");
-        if (onlyNOCCheckbox.checked) {
+        if (this.checked) {
             NOCToFilter = filteredNOC;
             contentDiv.classList.add('noc-filter-active');
         } else {
@@ -276,10 +284,19 @@ function populateFilters() {
         }
         updatePage();
     });
-    const onlyNOCLabel = document.createElement("label");
-    onlyNOCLabel.textContent = `Only ${filteredNOC}`;
-    onlyNOCLabel.appendChild(onlyNOCCheckbox);
-    specialFilters.appendChild(onlyNOCLabel);
+    specialFilters.appendChild(onlyNOCCheckboxLabel);
+    const onlyMedalsCheckboxLabel = createSpecialFilterCheckbox("onlyMedals-checkbox", "Only Medals", function() {
+        const contentDiv = document.getElementById("content");
+        if (this.checked) {
+            onlyMedalEventFilter = true;
+            contentDiv.classList.add('medals-filter-active');
+        } else {
+            onlyMedalEventFilter = false;
+            contentDiv.classList.remove('medals-filter-active');
+        }
+        updatePage();
+    });
+    specialFilters.appendChild(onlyMedalsCheckboxLabel);
 
     filtersDiv.appendChild(specialFilters);
 

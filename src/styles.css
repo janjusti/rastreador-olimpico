@@ -89,6 +89,10 @@ body {
     border: 0.2vh solid #9bd94f;
 }
 
+#content.medals-filter-active {
+    border: 0.2vh solid #e6b400;
+}
+
 input[id="datePicker"] {
     margin: 1vh auto;
     text-align: center;
