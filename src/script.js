@@ -631,7 +631,8 @@ function updatePage() {
                 ).length;
                 if (pendingDiscipline+liveDiscipline > 0) {
                     eventStatusDiv.innerHTML += `: ${pendingDiscipline}+${liveDiscipline} to go`
-                } else {
+                } 
+                if (pendingDiscipline === 0) {
                     eventStatusDiv.classList.add("nextEvent");
                 }
             }
