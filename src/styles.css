@@ -7,7 +7,7 @@ body {
     font-size: 1.1rem;
 }
 
-#medals, #medalsContent {
+#medals, #medalsCheckboxes, #medalsContent {
     display: flex;
     flex-direction: column;
     align-items: center;

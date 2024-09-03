@@ -343,11 +343,15 @@ function populateMedals() {
     }
     contentDiv.innerHTML = '';
 
-    let radioContainer = document.getElementById('medalsRadioButtons');
-    if (!radioContainer) {
-        radioContainer = document.createElement('div');
-        radioContainer.id = 'medalsRadioButtons';
+    let configContainer = document.getElementById('medalsConfigs');
+    if (!configContainer) {
+        configContainer = document.createElement('div');
+        configContainer.id = 'medalsConfigs';
+        medalsDiv.insertBefore(configContainer, contentDiv);
 
+        let radioContainer = document.createElement('div');
+        radioContainer.id = 'medalsRadioButtons';
+        
         const modes = ['default', 'weighted', 'total'];
         modes.forEach(mode => {
             const label = document.createElement('label');
@@ -355,14 +359,27 @@ function populateMedals() {
             radio.type = 'radio';
             radio.name = 'medalMode';
             radio.value = mode;
-            if (mode === "default") {radio.checked = true;}
+            if (mode === "default") { radio.checked = true; }
             radio.onchange = () => populateMedals();
             label.appendChild(radio);
             label.appendChild(document.createTextNode(capitalizeFirstLetter(mode)));
             radioContainer.appendChild(label);
         });
 
-        medalsDiv.insertBefore(radioContainer, contentDiv);
+        let checkboxContainer = document.createElement('div');
+        checkboxContainer.id = 'medalsCheckboxes';
+
+        const showAllLabel = document.createElement('label');
+        const showAllCheckbox = document.createElement('input');
+        showAllCheckbox.type = 'checkbox';
+        showAllCheckbox.id = 'showAllCheckbox';
+        showAllCheckbox.onchange = () => populateMedals();
+        showAllLabel.appendChild(showAllCheckbox);
+        showAllLabel.appendChild(document.createTextNode('Show all'));
+        checkboxContainer.appendChild(showAllLabel);
+
+        configContainer.appendChild(radioContainer);
+        configContainer.appendChild(checkboxContainer);
     }
 
     if (medalsData.NOCs === undefined || medalsData.NOCs.length === 0) {
@@ -389,7 +406,7 @@ function populateMedals() {
         item.rank = index + 1;
     });
 
-    const newList = processedData.slice(0, 5);
+    const newList = document.getElementById('showAllCheckbox').checked ? processedData : processedData.slice(0, 5);
     const filteredIndex = processedData.findIndex(item => item.org === filteredNOC);
     if (filteredIndex !== -1) {
         const filteredItem = processedData[filteredIndex];
