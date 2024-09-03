@@ -135,26 +135,7 @@ async function fetchMedals() {
         }));
 
         const sortedList = filteredList.sort((a, b) => a.rank - b.rank);
-        const newList = sortedList.slice(0, 5);
-        const filteredIndex = sortedList.findIndex(item => item.org === filteredNOC);
-        if (filteredIndex !== -1) {
-            const filteredItem = sortedList[filteredIndex];
-
-            if (filteredIndex > 0 && !newList.some(item => item.org === sortedList[filteredIndex - 1].org)) {
-                newList.push(sortedList[filteredIndex - 1]);
-            }
-            if (filteredIndex < sortedList.length - 1 && !newList.some(item => item.org === sortedList[filteredIndex + 1].org)) {
-                newList.push(sortedList[filteredIndex + 1]);
-            }
-
-            if (!newList.some(item => item.org === filteredNOC)) {
-                newList.push(filteredItem);
-            }
-        }
-
-        const finalSortedList = newList.sort((a, b) => a.rank - b.rank);
-
-        return {"NOCs": finalSortedList, "last_mod": lastMod};
+        return {"NOCs": sortedList, "last_mod": lastMod};
     } catch (error) {
         console.error('Error fetching data:', error);
     }
@@ -343,14 +324,88 @@ function populateFilters() {
     filtersDiv.appendChild(disciplineFilters);
 }
 
+function calculateMedalPts(medalInfo) {
+    return medalInfo.gold * 7 + medalInfo.silver * 3 + medalInfo.bronze * 1;
+}
+
+function capitalizeFirstLetter(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+}
 
 function populateMedals() {
     const medalsDiv = document.getElementById('medals');
-    medalsDiv.innerHTML = '';
+
+    let contentDiv = document.getElementById('medalsContent');
+    if (!contentDiv) {
+        contentDiv = document.createElement('div');
+        contentDiv.id = 'medalsContent';
+        medalsDiv.appendChild(contentDiv);
+    }
+    contentDiv.innerHTML = '';
+
+    let radioContainer = document.getElementById('medalsRadioButtons');
+    if (!radioContainer) {
+        radioContainer = document.createElement('div');
+        radioContainer.id = 'medalsRadioButtons';
+
+        const modes = ['default', 'weighted', 'total'];
+        modes.forEach(mode => {
+            const label = document.createElement('label');
+            const radio = document.createElement('input');
+            radio.type = 'radio';
+            radio.name = 'medalMode';
+            radio.value = mode;
+            if (mode === "default") {radio.checked = true;}
+            radio.onchange = () => populateMedals();
+            label.appendChild(radio);
+            label.appendChild(document.createTextNode(capitalizeFirstLetter(mode)));
+            radioContainer.appendChild(label);
+        });
+
+        medalsDiv.insertBefore(radioContainer, contentDiv);
+    }
 
     if (medalsData.NOCs === undefined || medalsData.NOCs.length === 0) {
         return;
     }
+
+    const selectedMode = document.querySelector('input[name="medalMode"]:checked')?.value || 'default';
+
+    let processedData = medalsData.NOCs.map(item => ({ ...item }));
+    if (selectedMode === 'weighted') {
+        processedData.sort((a, b) => {
+            const pointsA = calculateMedalPts(a);
+            const pointsB = calculateMedalPts(b);
+            return pointsB - pointsA;
+        });
+        processedData.forEach(item => {
+            item.total = `${calculateMedalPts(item)}pts`;
+        });
+    } else if (selectedMode === 'total') {
+        processedData.sort((a, b) => b.total - a.total);
+    }
+
+    processedData.forEach((item, index) => {
+        item.rank = index + 1;
+    });
+
+    const newList = processedData.slice(0, 5);
+    const filteredIndex = processedData.findIndex(item => item.org === filteredNOC);
+    if (filteredIndex !== -1) {
+        const filteredItem = processedData[filteredIndex];
+
+        if (filteredIndex > 0 && !newList.some(item => item.org === processedData[filteredIndex - 1].org)) {
+            newList.push(processedData[filteredIndex - 1]);
+        }
+        if (filteredIndex < processedData.length - 1 && !newList.some(item => item.org === processedData[filteredIndex + 1].org)) {
+            newList.push(processedData[filteredIndex + 1]);
+        }
+
+        if (!newList.some(item => item.org === filteredNOC)) {
+            newList.push(filteredItem);
+        }
+    }
+    processedData = newList.sort((a, b) => a.rank - b.rank);
 
     const table = document.createElement('table');
     const currMode = detectModeByDate(new Date(getSelectedDate()));
@@ -360,8 +415,9 @@ function populateMedals() {
         currMode === "paralympics" ? 
         "https://www.paralympic.org/en/paris-2024-paralympics/medals" :
         null
-    )
+    );
     table.setAttribute('onclick', `window.open('${medalTableURL}', '_blank').focus();`);
+    
     const headerRow = document.createElement('tr');
     const headers = ['Rank', 'Country', 'Gold', 'Silver', 'Bronze', 'Total'];
     headers.forEach(headerText => {
@@ -371,22 +427,21 @@ function populateMedals() {
     });
     table.appendChild(headerRow);
 
-    medalsData.NOCs.forEach(item => {
+    processedData.forEach((item, index) => {
         const row = document.createElement('tr');
         if (item.org === filteredNOC) {
             row.classList.add('filteredNOC');
         }
         const data = [
-            item.rank, 
-            item.org, 
-            item.gold, 
-            item.silver, 
-            item.bronze, 
+            item.rank,
+            item.org,
+            item.gold,
+            item.silver,
+            item.bronze,
             item.total
-        ];        
+        ];
         data.forEach((text, index) => {
             const td = document.createElement('td');
-            
             if (index === 1) {
                 td.classList.add("country");
                 const img = document.createElement('img');
@@ -397,18 +452,17 @@ function populateMedals() {
                     currMode === "paralympics" ? 
                     `https://www.paralympic.org/OG2024/assets/images/flags/PG2024/${text}.webp` :
                     null
-                )
+                );
                 td.appendChild(img);
                 td.appendChild(document.createTextNode(text));
             } else {
                 td.textContent = text;
             }
-
             row.appendChild(td);
         });
         table.appendChild(row);
     });
-    
+
     const lastMod = document.createElement('span');
     const formattedDate = medalsData.last_mod.toLocaleString('en-GB', {
         day: '2-digit',
@@ -419,10 +473,10 @@ function populateMedals() {
         second: '2-digit',
         hour12: false
     }).replace(',', '');
-    lastMod.innerText = `Latest update: ${formattedDate} (${calculateTimeDifference(medalsData.last_mod)})`
+    lastMod.innerText = `Latest update: ${formattedDate} (${calculateTimeDifference(medalsData.last_mod)})`;
 
-    medalsDiv.appendChild(table);
-    medalsDiv.appendChild(lastMod);
+    contentDiv.appendChild(table);
+    contentDiv.appendChild(lastMod);
 }
 
 function formatTime(date) {
