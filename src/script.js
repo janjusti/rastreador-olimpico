@@ -575,6 +575,23 @@ function competitorsSort(a, b) {
     return a.order - b.order;
 }
 
+function stringToColor(str) {
+    let hash = 0;
+    for (let i = 0; i < str.length; i++) {
+        hash = str.charCodeAt(i) + ((hash << 5) - hash);
+    }
+
+    let color = '#';
+    for (let i = 0; i < 3; i++) {
+        let value = (hash >> (i * 8)) & 0xFF;
+        if (i === 0) value = Math.max(180, value);
+        else value = Math.max(60, value);         
+        color += ('00' + value.toString(16)).slice(-2);
+    }
+
+    return color;
+}
+
 function updatePage() {
     populateMedals();
     
@@ -670,10 +687,8 @@ function updatePage() {
             if (event.medalFlag === 3) {
                 eventTitleDiv.classList.add('bronze');
             }
-            if (event.status === "Getting Ready") {
-                eventTitleDiv.classList.add('gettingReady');
-            }
             eventTitleDiv.setAttribute('onclick', `window.open('${event.url}', '_blank').focus();`);
+            eventTitleDiv.style.color = stringToColor(event.disciplineName);
 
             const eventStatusDiv = document.createElement('div');
             eventStatusDiv.className = 'eventStatus';
@@ -706,6 +721,9 @@ function updatePage() {
                 if (pendingDiscipline === 0) {
                     eventStatusDiv.classList.add("nextEvent");
                 }
+            }            
+            if (event.status === "Getting Ready") {
+                eventStatusDiv.classList.add('gettingReady');
             }
 
             eventDiv.innerHTML = '';

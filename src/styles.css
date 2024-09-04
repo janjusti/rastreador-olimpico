@@ -209,7 +209,6 @@ input[id="datePicker"] {
 }
 
 .event div.eventTitle {
-    color: #c40a00;
     padding-bottom: 1vh;
     text-decoration: underline;
 }
@@ -233,7 +232,7 @@ div.event:has(.filteredNOC) .medal {
 }
 
 .event div.gettingReady {
-    color: #a28f00;
+    background-color: #a28f0054;
 }
 
 @media (max-width: 900px) {
