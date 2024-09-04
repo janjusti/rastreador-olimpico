@@ -7,6 +7,19 @@ body {
     font-size: 1.1rem;
 }
 
+.date-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-bottom: 1vh;
+}
+.date-container button {
+    margin: 0;
+}
+#datePicker {
+    margin: 0 1vh;
+}
+
 #medals, #medalsCheckboxes, #medalsContent {
     display: flex;
     flex-direction: column;

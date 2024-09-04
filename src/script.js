@@ -58,7 +58,18 @@ document.addEventListener('DOMContentLoaded', (event) => {
     let datePicker = document.getElementById('datePicker');
     datePicker.value = today;
     datePicker.onchange = handleDateChange;
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    prevBtn.addEventListener('click', () => changeDate(-1));
+    nextBtn.addEventListener('click', () => changeDate(1));
 });
+
+function changeDate(days) {
+    const currentDate = new Date(datePicker.value);
+    currentDate.setDate(currentDate.getDate() + days);
+    datePicker.value = currentDate.toISOString().split('T')[0];
+    handleDateChange();
+}
 
 function handleDateChange() {
     clearStats();
