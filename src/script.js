@@ -159,6 +159,9 @@ async function fetchData() {
         }
         const wasFullDataEmpty = isEmpty(fullData);
         fullData = await response.json();
+        fullData.units = fullData.units.filter(item => 
+            !item.competitors?.some(competitor => competitor.name === "")
+        );
         if (wasFullDataEmpty && !isEmpty(fullData)) {
             populateFilters();
         }
