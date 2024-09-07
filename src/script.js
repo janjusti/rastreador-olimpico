@@ -1,6 +1,6 @@
 const today = new Date().toISOString().split('T')[0];
-const olympicsDates = { "start": new Date('2024-07-24'), "end": new Date('2024-08-11') };
-const paralympicsDates = { "start": new Date('2024-08-28'), "end": new Date('2024-09-08') };
+const olympicsDates = genStartEndDates('2024-07-24', '2024-08-11');
+const paralympicsDates = genStartEndDates('2024-08-28', '2024-09-08');
 
 class ScheduleEvent {
     constructor(unit, hasCustomCountry) {     
@@ -32,6 +32,10 @@ let NOCToFilter;
 let onlyMedalEventFilter;
 var fullData;
 var medalsData = {};
+
+function genStartEndDates(startStr, endStr) {
+    return { "start": new Date(`${startStr} 00:00:00`), "end": new Date(`${endStr} 23:59:59`) };
+}
 
 function detectModeByDate(date) {
     if (date >= olympicsDates.start && date <= olympicsDates.end) {
