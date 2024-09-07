@@ -26,7 +26,7 @@ class ScheduleEvent {
 
 var URLparams = new URLSearchParams(window.location.search);
 
-var filteredNOC = "BRA";
+var filteredNOC = URLparams.has('NOC') ? URLparams.get('NOC') : "BRA";
 let sportsToFilter;
 let NOCToFilter;
 let onlyMedalEventFilter;
