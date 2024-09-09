@@ -1,4 +1,4 @@
-const today = new Date().toISOString().split('T')[0];
+const today = "2024-09-08";
 const olympicsDates = genStartEndDates('2024-07-24', '2024-08-11');
 const paralympicsDates = genStartEndDates('2024-08-28', '2024-09-08');
 
